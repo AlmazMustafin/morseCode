@@ -4,21 +4,20 @@ import (
 	"log"
 	"net/http"
 	"time"
- 	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/handlers"
+
+	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/handlers"
 )
 
 type Server struct {
-	Logger *log.Logger
-	Server *http.Server
+	Logger     *log.Logger
+	HttpServer *http.Server
 }
 
-func New(logger *log.Logger) *Server {
+func NewServer(logger *log.Logger) *http.Server {
 	mux := http.NewServeMux()
-
-	mux.HandleFunc("/", handlers.ServeIndexHandler)
-	mux.Handle("/upload", handlers.UploadHandler(logger))
-
-	srv := &http.Server{
+	mux.HandleFunc("/", handlers.IndexHandler)
+	mux.HandleFunc("/upload", handlers.UploadHandler)
+	httpServer := &http.Server{
 		Addr:         ":8080",
 		Handler:      mux,
 		ErrorLog:     logger,
@@ -26,14 +25,5 @@ func New(logger *log.Logger) *Server {
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  15 * time.Second,
 	}
-
-	return &Server{
-		Logger: logger,
-		Server: srv,
-	}
-}
-
-func (s *Server) Start() error {
-	s.Logger.Printf("Starting server on %s", s.Server.Addr)
-	return s.Server.ListenAndServe()
+	return httpServer
 }
