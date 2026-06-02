@@ -4,7 +4,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/server"
+	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
 )
 
 func ServeIndexHandler(w http.ResponseWriter, r *http.Request) {
