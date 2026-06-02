@@ -4,7 +4,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
+	"://github.com"
 )
 
 func ServeIndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,14 +20,21 @@ func UploadHandler(logger *log.Logger) http.HandlerFunc {
 			return
 		}
 
-		file, _, err := r.FormFile("file")
-		if err != nil {
-			file, _, err = r.FormFile("upload")
-			if err != nil {
-				logger.Printf("Error retrieving file: %v", err)
-				http.Error(w, "Error retrieving file", http.StatusInternalServerError)
-				return
+		keys := []string{"file", "upload", "text", "message", "morse"}
+		var file io.ReadCloser
+
+		for _, key := range keys {
+			f, _, err := r.FormFile(key)
+			if err == nil {
+				file = f
+				break
 			}
+		}
+
+		if file == nil {
+			logger.Printf("Error retrieving file: no valid key found in form")
+			http.Error(w, "Error retrieving file", http.StatusInternalServerError)
+			return
 		}
 		defer file.Close()
 
@@ -39,6 +46,7 @@ func UploadHandler(logger *log.Logger) http.HandlerFunc {
 		}
 
 		input := string(data)
+
 		result, err := service.Convert(input)
 		if err != nil {
 			logger.Printf("Conversion error: %v", err)
