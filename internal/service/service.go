@@ -6,7 +6,7 @@ import (
 	"github.com/Yandex-Practicum/go1fl-sprint6-final/pkg/morse"
 )
 
-func ConvertAuto(input string) (string, error) {
+func Convert(input string) (string, error) {
 	trimmed := strings.TrimSpace(input)
 	if trimmed == "" {
 		return "", errors.New("нет данных")
